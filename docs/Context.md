@@ -25,7 +25,7 @@ exploratory（仮置き許可・TODO明示）
 | カテゴリ | デフォルト6種 + カスタム追加・編集・削除 |
 | 周期 | 月額のみ |
 | デザイン | my-hp継承（#f7f5f2 / 和モダン / ミニマル）|
-| GitHubリポジトリ | https://github.com/kairazukafamily-del/subscription-manager（非公開）|
+| GitHubリポジトリ | https://github.com/kairazukafamily-del/subscription-manager（公開）|
 
 ---
 

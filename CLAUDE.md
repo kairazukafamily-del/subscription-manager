@@ -13,7 +13,7 @@ mode: exploratory
 個人用サブスクリプション管理ローカルWebアプリ。
 Next.js dev server をローカルサーバーとして使用。
 
-**GitHub:** https://github.com/kairazukafamily-del/subscription-manager（非公開）
+**GitHub:** https://github.com/kairazukafamily-del/subscription-manager（公開）
 
 ---
 
