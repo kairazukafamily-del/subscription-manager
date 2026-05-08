@@ -13,13 +13,25 @@ mode: exploratory
 個人用サブスクリプション管理ローカルWebアプリ。
 Next.js dev server をローカルサーバーとして使用。
 
+**GitHub:** https://github.com/kairazukafamily-del/subscription-manager（非公開）
+
+---
+
+## 起動方法
+
+```bash
+cd ~/projects/subscription-manager
+npm run dev
+# http://localhost:3000 で起動
+```
+
 ---
 
 ## 技術スタック
 
-- Next.js (App Router) / TypeScript / Tailwind CSS
-- データ永続化: localStorage
-- 為替レート: frankfurter.app API（APIキー不要）
+- Next.js 16.2.4 (App Router) / TypeScript / Tailwind CSS v4
+- データ永続化: localStorage（DBなし）
+- 為替レート: /api/rate（サーバーサイドプロキシ）→ frankfurter.app → jsdelivr CDN fallback
 - 通知: Notification API（ブラウザ）
 
 ---
@@ -28,10 +40,28 @@ Next.js dev server をローカルサーバーとして使用。
 
 ```
 src/
-├── app/           # layout.tsx / page.tsx / globals.css
-├── components/    # SubscriptionApp / Dashboard / FilterBar / List / Card / Modal
-├── types/         # index.ts（型定義）
-└── lib/           # storage.ts / exchange.ts / notifications.ts
+├── app/
+│   ├── api/rate/route.ts   # 為替レートAPIプロキシ（frankfurter.app + CDN fallback）
+│   ├── globals.css          # my-hpカラーパレット / フォント設定
+│   ├── layout.tsx           # メタデータ
+│   └── page.tsx             # SubscriptionApp をレンダリング
+├── components/
+│   ├── SubscriptionApp.tsx  # Root: 全状態管理・フィルタロジック
+│   ├── Dashboard.tsx        # 月間合計・USD/JPYレート表示
+│   ├── FilterBar.tsx        # ステータス/カテゴリフィルタ
+│   ├── SubscriptionList.tsx # カード一覧
+│   ├── SubscriptionCard.tsx # サービスカード（クリックで編集）
+│   ├── SubscriptionModal.tsx # 追加/編集モーダル
+│   └── CategoryModal.tsx    # カテゴリ管理モーダル
+├── types/
+│   └── index.ts             # Subscription / Category / ExchangeRateCache / RateInfo
+└── lib/
+    ├── storage.ts            # localStorage CRUD（キープレフィックス: subsc_v1_）
+    ├── exchange.ts           # 為替レートfetch・キャッシュ・toJpy変換
+    └── notifications.ts      # ブラウザ通知チェック（1日1回）
+docs/
+├── Spec_subscription-manager.md
+└── Context.md
 ```
 
 ---
@@ -69,6 +99,8 @@ src/
 | リンク | `#6a6560` |
 | キャプション | `#aaa49e` |
 | タグ背景 | `#eceae6` |
+| ボーダー | `#e8e5e1` |
+| 薄いアクセント | `#c0bbb6` |
 
 **トーン:** 和モダン / ミニマル / 静かな余白
 **タイポグラフィ:** font-light、tracking広め
