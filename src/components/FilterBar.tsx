@@ -20,7 +20,7 @@ const STATUS_LABELS: Record<StatusFilter, string> = {
 export function FilterBar({ statusFilter, categoryFilter, categories, onStatusChange, onCategoryChange, onManageCategories }: Props) {
   return (
     <div className="flex flex-col gap-3 mb-8">
-      <div className="flex gap-7 text-sm">
+      <div className="flex gap-10 text-sm">
         {(['all', 'active', 'paused'] as StatusFilter[]).map((s) => (
           <button
             key={s}

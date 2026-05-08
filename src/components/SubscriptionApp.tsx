@@ -49,10 +49,10 @@ export function SubscriptionApp() {
     });
   }, []);
 
-  async function fetchRate() {
+  async function fetchRate(forceRefresh = false) {
     setRateLoading(true);
     try {
-      const info = await getUsdJpyRate();
+      const info = await getUsdJpyRate(forceRefresh);
       setRateInfo(info);
     } finally {
       setRateLoading(false);
@@ -110,7 +110,7 @@ export function SubscriptionApp() {
 
       <main className="max-w-lg mx-auto px-6 py-16">
         <div className="flex items-baseline justify-between mb-12">
-          <h1 className="text-base tracking-widest text-[#c0bbb6] font-light">サブスク管理</h1>
+          <h1 className="text-xs tracking-widest text-[#c0bbb6] font-light">subscriptions</h1>
           <button
             onClick={() => setModal({ open: true, editing: null })}
             className="text-[10px] tracking-wider text-[#c0bbb6] hover:text-[#aaa49e] transition-colors font-light"
@@ -119,7 +119,7 @@ export function SubscriptionApp() {
           </button>
         </div>
 
-        <Dashboard totalJpy={totalJpy} activeCount={activeCount} rateInfo={rateInfo} rateLoading={rateLoading} onRefreshRate={fetchRate} />
+        <Dashboard totalJpy={totalJpy} activeCount={activeCount} rateInfo={rateInfo} rateLoading={rateLoading} onRefreshRate={() => fetchRate(true)} />
 
         <FilterBar
           statusFilter={statusFilter}

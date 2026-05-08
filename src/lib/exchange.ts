@@ -3,10 +3,10 @@ import { getCachedRate, saveCachedRate } from './storage';
 
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000;
 
-export async function getUsdJpyRate(): Promise<RateInfo> {
+export async function getUsdJpyRate(forceRefresh = false): Promise<RateInfo> {
   const cached = getCachedRate();
 
-  if (cached) {
+  if (!forceRefresh && cached) {
     const age = Date.now() - new Date(cached.cachedAt).getTime();
     if (age < CACHE_TTL_MS) {
       return { rate: cached.rate, cachedAt: cached.cachedAt, error: null };
