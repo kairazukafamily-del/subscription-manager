@@ -1,5 +1,12 @@
 import type { Category, ExchangeRateCache, Subscription } from '@/types';
 
+export interface ExportData {
+  version: 1;
+  exportedAt: string;
+  subscriptions: Subscription[];
+  categories: Category[];
+}
+
 const KEYS = {
   subscriptions: 'subsc_v1_subscriptions',
   categories: 'subsc_v1_categories',
@@ -61,4 +68,32 @@ export function getLastNotifyDate(): string | null {
 
 export function saveLastNotifyDate(date: string): void {
   localStorage.setItem(KEYS.notifyChecked, date);
+}
+
+export function exportData(): void {
+  const data: ExportData = {
+    version: 1,
+    exportedAt: new Date().toISOString(),
+    subscriptions: getSubscriptions(),
+    categories: getCategories(),
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `subscriptions-${new Date().toISOString().slice(0, 10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+export function parseImport(json: string): ExportData | null {
+  try {
+    const data = JSON.parse(json);
+    if (data.version !== 1) return null;
+    if (!Array.isArray(data.subscriptions)) return null;
+    if (!Array.isArray(data.categories)) return null;
+    return data as ExportData;
+  } catch {
+    return null;
+  }
 }

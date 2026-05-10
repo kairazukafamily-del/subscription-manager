@@ -1,10 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { Category, RateInfo, ServiceStatus, SortKey, SortOrder, Subscription } from '@/types';
 import {
+  exportData,
   getCategories,
   getSubscriptions,
+  parseImport,
   saveCategories,
   saveSubscriptions,
 } from '@/lib/storage';
@@ -33,6 +35,7 @@ export function SubscriptionApp() {
   const [notifyDenied, setNotifyDenied] = useState(false);
   const [rateLoading, setRateLoading] = useState(false);
   const [categoryModalOpen, setCategoryModalOpen] = useState(false);
+  const importInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const subs = getSubscriptions();
@@ -90,6 +93,42 @@ export function SubscriptionApp() {
     saveCategories(cats);
   }
 
+  function handleExport() {
+    exportData();
+  }
+
+  function handleImportFile(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    e.target.value = '';
+
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const text = ev.target?.result;
+      if (typeof text !== 'string') return;
+
+      const data = parseImport(text);
+      if (!data) {
+        alert('インポートできませんでした。ファイル形式を確認してください。');
+        return;
+      }
+
+      const existing = subscriptions.length;
+      const confirmed =
+        existing === 0 ||
+        window.confirm(
+          `現在の${existing}件のデータを上書きします。よろしいですか？`
+        );
+      if (!confirmed) return;
+
+      saveSubscriptions(data.subscriptions);
+      saveCategories(data.categories);
+      setSubscriptions(data.subscriptions);
+      setCategories(data.categories);
+    };
+    reader.readAsText(file);
+  }
+
   const filtered = subscriptions.filter((s) => {
     if (statusFilter !== 'all' && s.status !== statusFilter) return false;
     if (categoryFilter !== 'all' && s.category !== categoryFilter) return false;
@@ -125,12 +164,33 @@ export function SubscriptionApp() {
       <main className="max-w-lg mx-auto px-6 py-16">
         <div className="flex items-baseline justify-between mb-12">
           <h1 className="text-xs tracking-widest text-[#c0bbb6] font-light">subscriptions</h1>
-          <button
-            onClick={() => setModal({ open: true, editing: null })}
-            className="text-[10px] tracking-wide text-[#c0bbb6] hover:text-[#aaa49e] transition-colors font-light"
-          >
-            ＋ 追加
-          </button>
+          <div className="flex items-baseline gap-5">
+            <button
+              onClick={handleExport}
+              className="text-[10px] tracking-wide text-[#c0bbb6] hover:text-[#aaa49e] transition-colors font-light"
+            >
+              ↓ export
+            </button>
+            <button
+              onClick={() => importInputRef.current?.click()}
+              className="text-[10px] tracking-wide text-[#c0bbb6] hover:text-[#aaa49e] transition-colors font-light"
+            >
+              ↑ import
+            </button>
+            <input
+              ref={importInputRef}
+              type="file"
+              accept=".json"
+              className="hidden"
+              onChange={handleImportFile}
+            />
+            <button
+              onClick={() => setModal({ open: true, editing: null })}
+              className="text-[10px] tracking-wide text-[#c0bbb6] hover:text-[#aaa49e] transition-colors font-light"
+            >
+              ＋ 追加
+            </button>
+          </div>
         </div>
 
         <Dashboard totalJpy={totalJpy} activeCount={activeCount} rateInfo={rateInfo} rateLoading={rateLoading} onRefreshRate={() => fetchRate(true)} />
