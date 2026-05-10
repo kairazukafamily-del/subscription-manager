@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { Category, RateInfo, ServiceStatus, Subscription } from '@/types';
+import type { Category, RateInfo, ServiceStatus, SortKey, SortOrder, Subscription } from '@/types';
 import {
   getCategories,
   getSubscriptions,
@@ -24,6 +24,8 @@ export function SubscriptionApp() {
   const [rateInfo, setRateInfo] = useState<RateInfo>({ rate: 0, cachedAt: null, error: null });
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
   const [categoryFilter, setCategoryFilter] = useState('all');
+  const [sortKey, setSortKey] = useState<SortKey>('name');
+  const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
   const [modal, setModal] = useState<{ open: boolean; editing: Subscription | null }>({
     open: false,
     editing: null,
@@ -94,6 +96,18 @@ export function SubscriptionApp() {
     return true;
   });
 
+  const sorted = [...filtered].sort((a, b) => {
+    let cmp = 0;
+    if (sortKey === 'name') {
+      cmp = a.name.localeCompare(b.name, 'ja');
+    } else if (sortKey === 'amount') {
+      cmp = toJpy(a.amount, a.currency, rateInfo.rate) - toJpy(b.amount, b.currency, rateInfo.rate);
+    } else {
+      cmp = a.billingDay - b.billingDay;
+    }
+    return sortOrder === 'asc' ? cmp : -cmp;
+  });
+
   const totalJpy = subscriptions
     .filter((s) => s.status === 'active')
     .reduce((sum, s) => sum + toJpy(s.amount, s.currency, rateInfo.rate), 0);
@@ -113,7 +127,7 @@ export function SubscriptionApp() {
           <h1 className="text-xs tracking-widest text-[#c0bbb6] font-light">subscriptions</h1>
           <button
             onClick={() => setModal({ open: true, editing: null })}
-            className="text-[10px] tracking-wider text-[#c0bbb6] hover:text-[#aaa49e] transition-colors font-light"
+            className="text-[10px] tracking-wide text-[#c0bbb6] hover:text-[#aaa49e] transition-colors font-light"
           >
             ＋ 追加
           </button>
@@ -125,13 +139,17 @@ export function SubscriptionApp() {
           statusFilter={statusFilter}
           categoryFilter={categoryFilter}
           categories={categories}
+          sortKey={sortKey}
+          sortOrder={sortOrder}
           onStatusChange={setStatusFilter}
           onCategoryChange={setCategoryFilter}
           onManageCategories={() => setCategoryModalOpen(true)}
+          onSortKeyChange={setSortKey}
+          onSortOrderToggle={() => setSortOrder((o) => (o === 'asc' ? 'desc' : 'asc'))}
         />
 
         <SubscriptionList
-          subscriptions={filtered}
+          subscriptions={sorted}
           categories={categories}
           rateInfo={rateInfo}
           onEdit={(sub) => setModal({ open: true, editing: sub })}

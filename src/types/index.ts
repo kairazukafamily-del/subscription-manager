@@ -1,5 +1,7 @@
 export type Currency = 'JPY' | 'USD';
 export type ServiceStatus = 'active' | 'paused';
+export type SortKey = 'name' | 'amount' | 'billingDay';
+export type SortOrder = 'asc' | 'desc';
 
 export interface Subscription {
   id: string;

@@ -12,9 +12,16 @@ interface Props {
 export function Dashboard({ totalJpy, activeCount, rateInfo, rateLoading, onRefreshRate }: Props) {
   return (
     <div className="mb-10">
+      <div className="mb-4">
+        <p className="text-xs tracking-widest text-[#aaa49e] mb-1">年間合計</p>
+        <p className="text-2xl font-light text-[#7a7572]">
+          ¥ {(totalJpy * 12).toLocaleString()}
+        </p>
+      </div>
+
       <div className="mb-8">
         <p className="text-xs tracking-widest text-[#aaa49e] mb-1">月間合計</p>
-        <p className="text-4xl font-light tracking-tight text-[#3a3734]">
+        <p className="text-4xl font-light text-[#3a3734]">
           ¥ {totalJpy.toLocaleString()}
         </p>
       </div>

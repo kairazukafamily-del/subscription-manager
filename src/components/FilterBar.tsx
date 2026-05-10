@@ -1,4 +1,4 @@
-import type { Category, ServiceStatus } from '@/types';
+import type { Category, ServiceStatus, SortKey, SortOrder } from '@/types';
 
 type StatusFilter = ServiceStatus | 'all';
 
@@ -6,9 +6,13 @@ interface Props {
   statusFilter: StatusFilter;
   categoryFilter: string;
   categories: Category[];
+  sortKey: SortKey;
+  sortOrder: SortOrder;
   onStatusChange: (s: StatusFilter) => void;
   onCategoryChange: (c: string) => void;
   onManageCategories: () => void;
+  onSortKeyChange: (k: SortKey) => void;
+  onSortOrderToggle: () => void;
 }
 
 const STATUS_LABELS: Record<StatusFilter, string> = {
@@ -17,7 +21,13 @@ const STATUS_LABELS: Record<StatusFilter, string> = {
   paused: '停止中',
 };
 
-export function FilterBar({ statusFilter, categoryFilter, categories, onStatusChange, onCategoryChange, onManageCategories }: Props) {
+const SORT_KEY_LABELS: Record<SortKey, string> = {
+  name: '名前',
+  amount: '金額',
+  billingDay: '請求日',
+};
+
+export function FilterBar({ statusFilter, categoryFilter, categories, sortKey, sortOrder, onStatusChange, onCategoryChange, onManageCategories, onSortKeyChange, onSortOrderToggle }: Props) {
   return (
     <div className="flex flex-col gap-3 mb-8">
       <div className="flex gap-10 text-sm">
@@ -52,6 +62,28 @@ export function FilterBar({ statusFilter, categoryFilter, categories, onStatusCh
           className="text-[10px] text-[#c0bbb6] hover:text-[#aaa49e] transition-colors tracking-wide"
         >
           編集
+        </button>
+      </div>
+
+      <div className="flex items-center gap-4 text-[10px]">
+{(['name', 'amount', 'billingDay'] as SortKey[]).map((k) => (
+          <button
+            key={k}
+            onClick={() => onSortKeyChange(k)}
+            className={`tracking-wide transition-colors ${
+              sortKey === k
+                ? 'text-[#3a3734] border-b border-[#3a3734]'
+                : 'text-[#aaa49e] hover:text-[#7a7572]'
+            }`}
+          >
+            {SORT_KEY_LABELS[k]}
+          </button>
+        ))}
+        <button
+          onClick={onSortOrderToggle}
+          className="text-xs text-[#7a7572] hover:text-[#3a3734] transition-colors ml-1"
+        >
+          {sortOrder === 'asc' ? '↑' : '↓'}
         </button>
       </div>
     </div>
