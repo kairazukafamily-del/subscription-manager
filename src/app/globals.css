@@ -25,5 +25,5 @@
 body {
   background: var(--c-bg);
   color: var(--c-text);
-  font-family: var(--font-zen-kaku), sans-serif;
+  font-family: 'Helvetica Neue', Arial, var(--font-zen-kaku), 'Hiragino Kaku Gothic ProN', sans-serif;
 }
