@@ -93,13 +93,6 @@ export function SubscriptionApp() {
     saveCategories(cats);
   }
 
-  function handleMoveCategory(fromId: string, toId: string) {
-    const updated = subscriptions.map((s) =>
-      s.category === fromId ? { ...s, category: toId } : s
-    );
-    persist(updated);
-  }
-
   function handleExport() {
     exportData();
   }
@@ -239,7 +232,6 @@ export function SubscriptionApp() {
           categories={categories}
           subscriptions={subscriptions}
           onSave={handleSaveCategories}
-          onMoveSubs={handleMoveCategory}
           onClose={() => setCategoryModalOpen(false)}
         />
       )}
