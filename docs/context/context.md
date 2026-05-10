@@ -2,7 +2,7 @@
 
 ## 現在のフェーズ
 
-**Phase 1: 実装完了・GitHub公開済み**
+**Phase 2: Vercel公開済み・機能追加継続中**
 
 ## プロジェクトモード
 
@@ -26,6 +26,7 @@ exploratory（仮置き許可・TODO明示）
 | 周期 | 月額のみ |
 | デザイン | my-hp継承（#f7f5f2 / 和モダン / ミニマル）|
 | GitHubリポジトリ | https://github.com/kairazukafamily-del/subscription-manager（公開）|
+| 本番URL | https://subscription-manager-jade.vercel.app（Vercel）|
 
 ---
 
@@ -46,6 +47,13 @@ exploratory（仮置き許可・TODO明示）
 - [x] 動作確認済み（npm run dev）
 - [x] TypeScript型チェック通過確認
 - [x] GitHubプライベートリポジトリに公開
+- [x] GitHubリポジトリをパブリックに変更
+- [x] Vercel本番デプロイ（subscription-manager-jade.vercel.app）
+- [x] Dashboard: 年間合計表示（月間合計 × 12）を月間合計の上に追加
+- [x] ソート機能（名前 / 金額 / 請求日・昇降順トグル）
+- [x] エクスポート機能（subscriptions + categories を JSON ダウンロード）
+- [x] インポート機能（JSON ファイル読み込み・既存データ確認ダイアログ付き）
+- [x] フォント修正: 数字に Helvetica Neue を優先、日本語に Zen Kaku Gothic New を使用
 
 ---
 
@@ -60,6 +68,9 @@ exploratory（仮置き許可・TODO明示）
 - 2026-05-08: 状態を「アクティブ / 停止中」の2値に確定（解約済みは運用上不要と判断）
 - 2026-05-08: カテゴリ管理UIをカード詳細から独立したモーダルに分離（フィルタ行「編集」ボタン起動）
 - 2026-05-08: GitHubプライベートリポジトリに公開（kairazukafamily-del/subscription-manager）
+- 2026-05-10: Vercel本番デプロイ・リポジトリをパブリックに変更
+- 2026-05-10: 年間合計・ソート機能・エクスポート/インポート機能を追加
+- 2026-05-10: フォント修正: 数字細長き問題を Helvetica Neue 優先指定で解決（Zen Kaku は日本語のみに使用）
 
 ---
 
